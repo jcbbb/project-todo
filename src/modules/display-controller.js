@@ -11,18 +11,21 @@ const DisplayConroller = (() => {
         const projectList = getElement('.projects-list');
         projectList.innerHTML = '';
         projects.forEach((project, index) => {
-            const projectLi = createElement('li', { class: 'projects-list__item', id: index, 'data-title': project.title });
-            const spanCircle = createElement('span', { class: 'circle-filled' });
-            const spanText = createElement('span', { class: 'projects-list__item-text' });
-            const deleteIcon = createElement('i', { class: 'uil uil-times side-icon-delete' });
-            spanText.textContent = project.title;
-            projectLi.addEventListener('click', () => {
-                renderMain(project.title);
-                selectProject(project.title);
-            })
+            if (index > 2) {
+                const projectLi = createElement('li', { class: 'projects-list__item', id: index, 'data-title': project.title });
+                const spanCircle = createElement('span', { class: 'circle-filled' });
+                const spanText = createElement('span', { class: 'projects-list__item-text' });
+                const deleteIcon = createElement('i', { class: 'uil uil-times side-icon-delete' });
+                spanText.textContent = project.title;
+                projectLi.addEventListener('click', () => {
+                    renderMain(project.title);
+                    selectProject(project.title);
+                    renderTodos();
+                })
 
-            projectLi.append(spanCircle, spanText, deleteIcon);
-            projectList.append(projectLi);
+                projectLi.append(spanCircle, spanText, deleteIcon);
+                projectList.append(projectLi);
+            }
         })
     }
 
@@ -69,7 +72,7 @@ const DisplayConroller = (() => {
 
             //TextContents
             todoTitle.textContent = todo.title;
-            dateSpan.textContent = todo.date;
+            dateSpan.textContent = todo.due;
 
             // Appending
             spanMark.append(favIcon);
@@ -79,9 +82,34 @@ const DisplayConroller = (() => {
             li.append(prioritySpan, detailsDiv, actionsDiv);
 
             ul.append(li);
+        });
+    }
+
+    const renderDefault = () => {
+        const defaultProjects = JSON.parse(localStorage.getItem('projects'));
+        const icons = ['uil uil-apps', 'uil uil-calendar-alt', 'uil uil-favorite'];
+        const ul = getElement('.list');
+
+        defaultProjects.forEach((project, index) => {
+            if (index < 3) {
+                const li = createElement('li', { class: 'list__item', 'data-title': project.title });
+                const icon = createElement('i', { class: `${icons[index]} side-icon` });
+                const span = createElement('span', { class: 'list__item-text' });
+
+                span.textContent = project.title;
+
+                li.append(icon, span);
+                ul.append(li);
+            }
         })
     }
-    return { renderProjects, renderMain, renderTodos, hightlightProject }
+    return {
+        renderProjects,
+        renderMain,
+        renderTodos,
+        hightlightProject,
+        renderDefault,
+    }
 })()
 
 

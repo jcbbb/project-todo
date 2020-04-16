@@ -1,34 +1,5 @@
 const Projects = (() => {
 
-    const projects = [
-        {
-            title: 'Overview',
-            todos: [],
-        },
-        {
-            title: 'Today',
-            todos: [],
-        },
-        {
-            title: 'Important',
-            todos: [],
-        }
-
-    ];
-
-    const addProject = (projectTitle) => {
-        const obj = {}
-        const todos = [];
-
-        obj.title = projectTitle;
-        obj.todos = todos;
-
-        projects.push(obj)
-
-
-        localStorage.setItem('projects', JSON.stringify(projects));
-    }
-
     const getSelectedProject = () => {
         return localStorage.getItem('selected');
     }
@@ -40,6 +11,21 @@ const Projects = (() => {
     const getProjects = () => {
         return localStorage.getItem('projects');
     }
+
+    const projects = JSON.parse(getProjects());
+
+    const addProject = (projectTitle) => {
+        const obj = {}
+        const todos = [];
+
+        obj.title = projectTitle;
+        obj.todos = todos;
+
+        projects.push(obj)
+
+        localStorage.setItem('projects', JSON.stringify(projects));
+    }
+
     return {
         addProject,
         selectProject,

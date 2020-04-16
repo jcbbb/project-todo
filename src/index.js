@@ -1,9 +1,14 @@
+import init from './modules/init.js';
 import DOMHelpers from './modules/dom-helpers.js';
 import DisplayController from './modules/display-controller.js';
 import Projects from './modules/projects.js';
 import flatpickr from 'flatpickr';
 import Todos from './modules/todos.js';
 
+// Start default projects
+init();
+
+// Init date picker
 flatpickr('#due', {
     altInput: true,
     altFormat: "F j, Y",
@@ -19,11 +24,19 @@ const {
     hideForm,
     addClass,
     removeClass,
-    toggleClass
+    toggleClass,
+    clearFields,
 } = DOMHelpers;
 
 const { addProject, selectProject, getSelectedProject } = Projects;
-const { renderMain, renderProjects, hightlightProject, renderTodos } = DisplayController;
+const {
+    renderMain,
+    renderProjects,
+    hightlightProject,
+    renderTodos,
+    renderDefault,
+} = DisplayController;
+
 const { addTodo } = Todos;
 
 const addProjectBtn = getElement('.form__cta');
@@ -68,10 +81,20 @@ addTodoForm.on('submit', (ev) => {
     obj.due = getElement('input[name="due"]').value;
     obj.priority = getElement('input[name="priority"]:checked').value;
     obj.description = getElement('textarea[name="description"]').value;
+    obj.completed = false;
+    obj.isImportant = false;
 
     addTodo(obj);
     hideForm(addTodoFormContainer);
+    renderTodos();
+    clearFields(addTodoForm);
 });
+
+
+if (localStorage.getItem('projects') !== null) {
+    renderDefault();
+    renderProjects();
+}
 
 const listItems = getElements('.list__item');
 listItems.on('click', ({ target }) => {
@@ -81,5 +104,3 @@ listItems.on('click', ({ target }) => {
     hightlightProject(target);
     renderTodos();
 });
-
-

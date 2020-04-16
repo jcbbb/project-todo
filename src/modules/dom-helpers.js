@@ -49,7 +49,15 @@ const DOMHelpers = (() => {
         }
 
         return siblings;
-    };
+    }
+
+    const clearFields = (form) => {
+        [...form.elements].forEach((element) => {
+            if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
+                element.value = '';
+            }
+        })
+    }
 
     return {
         createElement,
@@ -61,6 +69,7 @@ const DOMHelpers = (() => {
         showForm,
         hideForm,
         getSiblings,
+        clearFields,
     }
 })()
 

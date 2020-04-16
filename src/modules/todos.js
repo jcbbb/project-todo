@@ -14,8 +14,7 @@ const Todos = (() => {
 
         for (let key in allProjects) {
             if (allProjects[key].title === selected) {
-                todos.push(todo);
-                allProjects[key].todos = todos;
+                allProjects[key].todos.push(todo)
             }
         }
 

@@ -184,12 +184,11 @@ main {
     &__close {
         position: absolute;
         right: 20px;
-        top: 32px;
+        top: 25px;
         cursor: pointer;
-        width: 20px;
-        height: 20px;
         display: block;
         color: $primary-text-color;
+        font-size: 24px;
     }
 
     &__group {
