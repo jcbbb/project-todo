@@ -1,0 +1,150 @@
+.aside {
+    width: 280px;
+    padding: 20px 15px;
+    border-right: 1px solid $primary-color-light;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    &__text {
+        font-size: 25px;
+        color: $primary-color;
+        font-weight: $bold;
+    }
+}
+
+.list {
+    margin-top: 46px;
+    &__item {
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        padding: 14px 15px;
+        margin-bottom: 15px;
+        color: $disabled-color;
+        cursor: pointer;
+        transition: all 150ms ease-in-out;
+        &:hover {
+            background: $primary-color-light;
+            color: $primary-color;
+        }
+        &-text {
+            margin-left: 12px;
+            font-size:17px;
+            font-weight: $bold;
+            pointer-events: none;
+            flex-grow: 1;
+        }
+        &--active {
+            background:$primary-color-light;
+            color: $primary-color;
+        }
+        .side-icon {
+            font-size: 20px;
+        } 
+    }
+}
+
+.projects {
+    margin-top: 40px;
+    flex-grow: 1;
+    &__heading {
+        font-size: 19px;
+        font-weight: $bold;
+        color: $primary-color;
+    }
+}
+.projects-list {
+    margin-top: 25px;
+    &__item {
+        @extend .list__item;
+        overflow: hidden;
+        &:hover .side-icon-delete {
+            transform: translateX(0);
+            pointer-events: all;
+        }
+        &:hover .circle-filled {
+            background: $primary-color;
+        }
+        &-text {
+            @extend .list__item-text;
+        }
+        .circle-filled {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: $disabled-color;
+            transition: all 150ms ease-in-out;
+        }
+        .side-icon-delete {
+            transition: transform 150ms ease-in-out;
+            transform: translateX(80px);
+            pointer-events: none;
+            font-size: 20px;
+        }
+    }
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &__group {
+        position: relative;
+        transform: scaleX(0);
+        transition: transform 100ms ease-in-out;
+        transform-origin: left;
+        &--active {
+            transform: scaleX(1);
+        }
+    }
+    &__input {
+        width: 250px;
+        padding: 12px 8px;
+        font-size: 19px;
+        border-radius: 6px;
+        border: 1px solid transparent;
+        outline: none;
+        color: $primary-text-color;
+        border: 1px solid $primary-color;
+        &:focus + .form__label, &:valid + .form__label {
+            top: -20px;
+            left: 0;
+            font-size: 90%;
+        }
+    }
+    &__label {
+        position: absolute;
+        color: $primary-color;
+        font-weight: $bold;
+        font-size: 17px;
+        left: 8px;
+        top: 14px;
+        transition: all 100ms ease-in-out;
+    }
+    &__cta {
+        background: $primary-color;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        color: #fff;
+        cursor: pointer;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+            background: $primary-color-dark;
+        }
+    }
+    .cta-icon {
+        pointer-events: none;
+        transition: transform 100ms ease-in-out;
+        font-size: 24px;
+        &--rotate {
+            transform: rotate(45deg);
+        }
+    }
+}

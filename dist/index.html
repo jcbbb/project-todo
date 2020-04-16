@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todoooo</title>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.5/css/unicons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+
+    <div class="content">
+        <div class="container">
+            <aside class="aside">
+                <div class="logo">
+                    <a href="#" class="logo__text">Todoooo</a>
+                </div>
+                <ul class="list">
+                    <li class="list__item list__item--active" data-title="Overview">
+                        <i class="uil uil-apps side-icon"></i>
+                        <span class="list__item-text">
+                            Overview
+                        </span>
+                    </li>
+                    <li class="list__item" data-title="Today">
+                        <i class="uil uil-calendar-alt side-icon"></i>
+                        <span class="list__item-text">
+                            Today
+                        </span>
+                    </li>
+                    <li class="list__item" data-title="Important">
+                        <i class="uil uil-favorite side-icon"></i>
+                        <span class="list__item-text">
+                            Important
+                        </span>
+                    </li>
+                </ul>
+
+                <div class="projects">
+                    <h2 class="projects__heading">Projects</h2>
+                    <ul class="projects-list">
+
+                    </ul>
+                </div>
+
+                <form class="form">
+                    <div class="form__group">
+                        <input type="text" id="new-project" class="form__input" required autofocus>
+                        <label for="new-porject" class="form__label">New project</label>
+                    </div>
+                    <button type="button" class="form__cta"><i class="uil uil-plus cta-icon"></i></button>
+                </form>
+
+            </aside>
+        </div>
+        <main>
+            <div class="container">
+                <div class="search-bar">
+                    <input type="text" class="search-bar__input" placeholder="Search...">
+                </div>
+                <div class="todos">
+                    <div class="todos__top">
+                        <h2 class="todos__heading">Selling</h2>
+                        <button class="todos__cta">Add</button>
+                    </div>
+
+                    <ul class="todos__list">
+                        <li class="todos__list-item">
+                            <span class="high-priority"></span>
+                            <div class="todos__list-details">
+                                <p class="todos__list-title">Sell a lot of goods</p>
+                                <span class="todos__list-date">Due April 11, 2020</span>
+                            </div>
+                            <div class="todos__list-actions">
+                                <span class="todos__action-mark"><i class="uil uil-favorite"></i></span>
+                                <span class="todos__action-delete"><i class="uil uil-trash"></i></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="addTodoFormContainer">
+
+                <div class="form-wrapper">
+                    <i data-feather="x" class="addTodoForm__close"></i>
+                    <h2 class="addTodoForm__heading">Add a todo</h2>
+                    <form class="addTodoForm">
+                        <div class="addTodoForm__group">
+                            <input class="addTodoForm__input" placeholder=" " type="text" id="title" name="title"
+                                title="Todo title" autofocus>
+                            <label class="addTodoForm__label--floating for=" title">Title</label>
+                        </div>
+                        <div class="addTodoForm__group">
+                            <input class="addTodoForm__input" placeholder=" " type="text" id="due" name="due"
+                                title="Due date">
+                            <label class="addTodoForm__label--floating" for="due">Due date</label>
+                        </div>
+                        <div class="addTodoForm__group">
+                            <span class="addTodoForm__group__heading">Priority</span>
+                            <input class="addTodoForm__radio addTodoForm__radio--high" type="radio" id="high-priority"
+                                name="priority" value="high-priority" checked>
+                            <label class="addTodoForm__radio-label" for="high-priority">High</label>
+                            <input class="addTodoForm__radio addTodoForm__radio--medium" type="radio"
+                                id="medium-priority" value="medium-priority" name="priority">
+                            <label class="addTodoForm__radio-label" for="medium-priority">Medium</label>
+                            <input class="addTodoForm__radio addTodoForm__radio--low" type="radio" id="low-priority"
+                                value="low-priority" name="priority">
+                            <label class="addTodoForm__radio-label" for="low-priority">Low</label>
+                        </div>
+                        <div class="addTodoForm__group">
+                            <textarea class="addTodoForm__textarea" placeholder=" " name="description"
+                                id="description"></textarea>
+                            <label class="addTodoForm__label--floating" for="description">Description</label>
+                        </div>
+                        <button class="addTodoForm__cta">Add</button>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script src="./main.js"></script>
+</body>
+
+</html>

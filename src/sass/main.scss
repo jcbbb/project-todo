@@ -1,0 +1,283 @@
+@import './vars';
+@import './aside';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Futura PT';
+}
+
+button {
+    border: none;
+    outline: none;
+}
+a {
+    text-decoration: none;
+}
+p {
+    font-size: 17px;
+}
+li {
+    list-style: none;
+}
+.content {
+    display: flex;
+}
+
+main {
+    width: 100%;
+}
+.search-bar {
+    width: 100%;
+    position: relative;
+    &__input {
+        outline: none;
+        width: 100%;
+        padding: 15px;
+        background: $primary-color-light;
+        border: 1px solid transparent;
+        font-size: 19px;
+        color: $primary-text-color;
+        &::placeholder {
+            color: $primary-color;
+            font-size: 18px;
+            font-weight: $normal;
+        }
+        &:focus {
+            background: transparent;
+        }
+    }
+}
+
+.todos {
+    padding: 38px 30px;
+    &__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    &__heading {
+        font-size: 24px;
+        font-weight: $bold;
+        color: $primary-color;
+    }
+    &__cta {
+        padding: 5px 15px;
+        color: #fff;
+        background: $primary-color;
+        font-weight: $bold;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 6px;
+        &:hover {
+            background: $primary-color-dark;
+        }
+    }
+    &__list {
+        margin-top: 25px;
+    }
+    &__list-item {
+        box-shadow: 0 3px 15px rgba($color: #000000, $alpha: 0.07);
+        display: flex;
+        align-items: center;
+        padding: 20px 15px;
+        color: $primary-text-color;
+        width: 100%;
+        cursor: pointer;
+        margin-bottom: 25px;
+        .high-priority {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid $priority-color-red;
+            background: $priority-color-red-light;
+            cursor: pointer;
+        }
+        .medium-priority {
+            @extend .high-priority;
+            border-color: $priority-color-yellow;
+            background: $priority-color-yellow-light;
+        }
+        .low-priority {
+            @extend .high-priority;
+            border-color: $priority-color-green;
+            background: $priority-color-green-light;
+        } 
+    }
+    &__list-details {
+        display: flex;
+        flex-direction: column;
+        margin-left: 15px;
+    }
+    &__list-title {
+        font-size: 20px;
+        font-weight: $bold;
+    }
+    &__list-date {
+        font-size: 16px;
+    }
+    &__list-actions {
+        margin-left: auto;
+    }
+    &__action-mark, &__action-delete {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: $priority-color-yellow;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        &:hover {
+            background: $priority-color-yellow-light;
+        }
+    }
+    &__action-delete {
+        color: $priority-color-red;
+        margin-left: 15px;
+        &:hover {
+            background: $priority-color-red-light;
+        }
+    }
+}
+
+.addTodoFormContainer {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    transform: translateY(-300px);
+    opacity: 0;
+    transition: all 200ms ease-in-out;
+    pointer-events: none;
+}
+.form-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+.form-wrapper {
+    width: 420px;
+    padding: 25px 20px;
+    background: #fff;
+    border-radius: 6px;
+    position: relative;
+}
+.addTodoForm {
+    display: flex;
+    flex-direction: column;
+    &__heading {
+        font-size: 24px;
+        font-weight: $bold;
+        text-align: center;
+        margin-bottom: 25px;
+        color: $primary-text-color;
+    }
+    &__close {
+        position: absolute;
+        right: 20px;
+        top: 32px;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        display: block;
+        color: $primary-text-color;
+    }
+
+    &__group {
+        position: relative;
+        margin-bottom: 25px;
+        &__heading {
+            display: block;
+            font-size: 17px;
+            font-weight: $bold;
+            color: $primary-text-color;
+            margin-bottom: 10px;
+        }
+    }
+    &__input, &__textarea {
+        width: 100%;
+        padding: 10px 8px;
+        font-size: 18px;
+        color: $primary-text-color;
+        background: $primary-color-light;
+        outline: none;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        &:not(:placeholder-shown) {
+            background: transparent;
+            border-color: $primary-color;
+        }
+        &:not(:placeholder-shown) + .addTodoForm__label--floating,
+        &:focus + .addTodoForm__label--floating {
+            top: -18px;
+            left: 0;
+            font-size: 94%;   
+        }
+    }
+    &__textarea {
+        height: 100px;
+        resize: none;
+    }
+    &__radio {
+        display: none;
+        &--high:checked + .addTodoForm__radio-label {
+            background: $priority-color-red-light;
+            border: 1px solid $priority-color-red;
+            color: $priority-color-red;
+        }
+        &--medium:checked + .addTodoForm__radio-label {
+            background: $priority-color-yellow-light;
+            border: 1px solid $priority-color-yellow;
+            color: $priority-color-yellow;
+        }
+        &--low:checked + .addTodoForm__radio-label {
+            background: $priority-color-green-light;
+            border: 1px solid $priority-color-green;
+            color: $priority-color-green;  
+        }
+    }
+    &__radio-label {
+        display: inline-block;
+        font-size: 17px;
+        font-weight: $bold;
+        padding: 10px 30px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-right: 10px;
+        background: $disabled-color-light;
+        border: 1px solid $disabled-color;
+        color: $disabled-color;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    &__label--floating {
+        font-size: 17px;
+        font-weight: $bold;
+        position: absolute;
+        color: $primary-color;
+        left: 12px;
+        top: 14px;
+        transition: all 100ms ease-in-out;
+        pointer-events: none;
+    }
+    &__cta {
+        padding: 10px 30px;
+        background: $primary-color;
+        font-weight: $bold;
+        color: #fff;
+        align-self: flex-end;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+    }
+}
