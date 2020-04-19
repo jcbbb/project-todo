@@ -31,18 +31,22 @@
             background: $primary-color-light;
             color: $primary-color;
         }
+        &-count {
+            font-weight: $bold;
+        }
         &-text {
             margin-left: 12px;
             font-size:17px;
             font-weight: $bold;
             pointer-events: none;
-            flex-grow: 1;
+            flex-grow: 3;
         }
         &--active {
             background:$primary-color-light;
             color: $primary-color;
         }
         .side-icon {
+            pointer-events: none;
             font-size: 20px;
         } 
     }
@@ -71,6 +75,12 @@
         }
         &-text {
             @extend .list__item-text;
+        }
+        &--active {
+            background: $primary-color-light;
+        }
+        &-count {
+            font-weight: $bold;
         }
         .circle-filled {
             width: 12px;
