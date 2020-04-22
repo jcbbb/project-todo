@@ -1,12 +1,10 @@
-import Projects from './projects.js';
-
-const { getSelectedProject, getProjects } = Projects;
+import { getSelectedProject, getProjects } from './projects.js';
 
 const Todos = (() => {
 	const getTodos = () => {
 		let todos;
 
-		const selected = JSON.parse(getSelectedProject());
+		const selected = getSelectedProject();
 		const projects = JSON.parse(getProjects());
 		for (let key in projects) {
 			if (projects[key].title === selected) {
@@ -18,7 +16,7 @@ const Todos = (() => {
 
 	const addTodo = (todo) => {
 		const allProjects = JSON.parse(getProjects());
-		const selected = JSON.parse(getSelectedProject());
+		const selected = getSelectedProject();
 
 		for (let key in allProjects) {
 			if (allProjects[key].title === selected) {
@@ -31,7 +29,7 @@ const Todos = (() => {
 
 	const selectTodo = (todoTitle) => {
 		const selectedTodo = {};
-		const selected = JSON.parse(getSelectedProject());
+		const selected = getSelectedProject();
 		const allProjects = JSON.parse(getProjects());
 
 		selectedTodo.title = selected;

@@ -367,6 +367,58 @@ main {
     }
 }
 
+.modal-container {
+    @extend .addTodoFormContainer;
+}
+.modal-active {
+    @extend .form-active;
+}
+.modal {
+    background: #fff;
+    width: 300px;
+    height: 200px;
+    box-shadow: 0 3px 15px rgba($color: #000000, $alpha: 0.07);
+    display:flex;
+    align-items:center;
+    flex-direction: column;
+    border-radius: 6px;
+    &__emoji {
+        font-size: 42px;
+        margin-top:25px;
+    }
+    &__info {
+        padding: 20px 35px;
+        text-align:center;
+        flex-grow: 1;
+        font-size: 18px;
+    }
+    &__actions {
+        display: flex;
+        width: 100%;
+        .question__cta, .ok__cta {
+            flex: 1;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: $bold;
+        } 
+        .ok__cta {
+            padding: 10px;
+            background: $primary-color;
+            color: #fff;
+            &:hover {
+                background: $primary-color-dark;
+            }
+        }
+        .question__cta {
+            color: $primary-text-color;
+            background: #fff;
+            &:hover {
+                background: $disabled-color-light;
+            }
+        }
+    }
+}
+
 @keyframes lineAnimation {
     from {
         text-decoration-color:transparent;

@@ -1,10 +1,11 @@
 import { formatDate } from 'flatpickr';
-import DOMHelpers from './dom-helpers.js';
-import Projects from './projects.js';
 import Todos from './todos.js';
-
-const { selectProject, getSelectedProject, getProjects } = Projects;
-const {
+import {
+	selectProject,
+	removeProject,
+	getSelectedProject,
+} from './projects.js';
+import {
 	createElement,
 	getElement,
 	addClass,
@@ -12,7 +13,7 @@ const {
 	getSiblings,
 	toggleClass,
 	toggleClasses,
-} = DOMHelpers;
+} from './dom-helpers.js';
 
 const {
 	getTodos,
@@ -24,41 +25,74 @@ const {
 
 const DisplayConroller = (() => {
 	const renderProjects = () => {
+		// Side icons for projects
+		const icons = [
+			'uil uil-apps',
+			'uil uil-calendar-alt',
+			'uil uil-favorite',
+			'uil uil-clipboard-notes',
+		];
+
 		const projects = JSON.parse(localStorage.getItem('projects'));
-		const projectList = getElement('.projects-list');
+		const projectList = getElement('.list');
 		projectList.innerHTML = '';
 		projects.forEach((project, index) => {
-			if (index > 2) {
-				const projectLi = createElement('li', {
-					class: 'projects-list__item',
-					id: index,
-					'data-title': project.title,
-				});
-				const spanCircle = createElement('span', {
-					class: 'circle-filled',
-				});
-				const spanText = createElement('span', {
-					class: 'projects-list__item-text',
-				});
-				const spanCount = createElement('span', {
-					class: 'projects-list__item-count',
-				});
-				const deleteIcon = createElement('i', {
-					class: 'uil uil-times side-icon-delete',
-				});
-				spanCount.textContent =
-					project.todos.length >= 1 ? project.todos.length : '';
+			const projectLi = createElement('li', {
+				class: 'list__item',
+				id: index,
+				'data-title': project.title,
+			});
+			const spanIcon = createElement('span', {
+				class:
+					index < 3
+						? `${icons[index]} side-icon`
+						: `${icons[3]} side-icon`,
+			});
 
-				spanText.textContent = project.title;
-				projectLi.addEventListener('click', () => {
-					renderMain(project.title);
-					selectProject(project.title);
-					renderTodos();
-				});
+			const spanText = createElement('span', {
+				class: 'list__item-text',
+			});
 
-				projectLi.append(spanCircle, spanText, spanCount, deleteIcon);
-				projectList.append(projectLi);
-			}
+			const spanCount = createElement('span', {
+				class: 'list__item-count',
+			});
+
+			const deleteIcon = createElement('i', {
+				class: 'uil uil-times side-icon-delete',
+			});
+
+			spanCount.textContent =
+				project.todos.length >= 1 ? project.todos.length : '';
+			spanText.textContent = project.title;
+
+			projectLi.addEventListener('click', () => {
+				renderMain(project.title);
+				selectProject(project.title);
+				hightlightProject(projectLi);
+				renderTodos();
+			});
+
+			/*
+			 * Continue from here!
+			 */
+
+			projectLi.addEventListener('animationend', () => {
+				//renderProjects();
+				//renderMain(getSelectedProject());
+			});
+
+			deleteIcon.addEventListener('click', () => {
+				selectProject(projectLi.previousSibling.dataset.title);
+				//hightlightProject(projectLi.previousElementSibling);
+				addClass(projectLi, 'animated', 'bounceOutLeft');
+				removeProject(project.title);
+			});
+
+			index < 3
+				? projectLi.append(spanIcon, spanText, spanCount)
+				: projectLi.append(spanIcon, spanText, spanCount, deleteIcon);
+
+			projectList.append(projectLi);
 		});
 	};
 
@@ -70,11 +104,13 @@ const DisplayConroller = (() => {
 	const hightlightProject = (target) => {
 		const siblings = getSiblings(target);
 
-		siblings.forEach((sibling) =>
-			removeClass(sibling, 'list__item--active'),
-		);
+		siblings.forEach((sibling) => {
+			removeClass(sibling, 'list__item--active');
+			removeClass(sibling.firstElementChild, 'circle-filled--active');
+		});
 
 		addClass(target, 'list__item--active');
+		addClass(target.firstElementChild, 'circle-filled--active');
 	};
 
 	const renderTodos = () => {
@@ -136,31 +172,28 @@ const DisplayConroller = (() => {
 			detailsDiv.append(todoTitle, dateSpan);
 			li.append(prioritySpan, detailsDiv, actionsDiv);
 
-			li.on('click', ({ target }) => {
+			li.addEventListener('click', ({ target }) => {
 				const { title } = target.dataset;
 				selectTodo(title);
 			});
 
-			prioritySpan.on('click', ({ target }) => {
+			li.addEventListener('animationend', renderTodos);
+			prioritySpan.addEventListener('click', ({ target }) => {
 				const todoItem = target.closest('.todos__list-item');
 				toggleCompleted(todoItem.dataset.title);
 				toggleLinethrough(todoItem);
 				toggleCheckmark(target);
 			});
 
-			spanDelete.on('click', ({ target }) => {
+			spanDelete.addEventListener('click', ({ target }) => {
 				const todoItem = target.closest('.todos__list-item');
 				addClass(todoItem, 'animated', 'bounceOutLeft');
 				removeTodo(todoItem.dataset.title);
 			});
 
-			spanMark.on('click', ({ target }) => {
+			spanMark.addEventListener('click', ({ target }) => {
 				const todoItem = target.closest('.todos__list-item');
 				markImportant(todoItem.dataset.title);
-			});
-
-			li.on('transitionend', () => {
-				renderTodos();
 			});
 
 			ul.append(li);
@@ -178,46 +211,11 @@ const DisplayConroller = (() => {
 		toggleClasses(target, 'completed', 'animated', 'bounceIn');
 	};
 
-	const renderDefault = () => {
-		const defaultProjects = JSON.parse(localStorage.getItem('projects'));
-		const icons = [
-			'uil uil-apps',
-			'uil uil-calendar-alt',
-			'uil uil-favorite',
-		];
-		const ul = getElement('.list');
-
-		defaultProjects.forEach((project, index) => {
-			if (index < 3) {
-				const li = createElement('li', {
-					class: 'list__item',
-					'data-title': project.title,
-				});
-				const icon = createElement('i', {
-					class: `${icons[index]} side-icon`,
-				});
-				const span = createElement('span', {
-					class: 'list__item-text',
-				});
-				const spanCount = createElement('span', {
-					class: 'list__item-count',
-				});
-
-				spanCount.textContent =
-					project.todos.length >= 1 ? project.todos.length : '';
-				span.textContent = project.title;
-
-				li.append(icon, span, spanCount);
-				ul.append(li);
-			}
-		});
-	};
 	return {
 		renderProjects,
 		renderMain,
 		renderTodos,
 		hightlightProject,
-		renderDefault,
 	};
 })();
 

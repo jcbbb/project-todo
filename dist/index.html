@@ -73,15 +73,15 @@
 								<div class="form-group">
 									<label class="form-group__label">Priority</label>
 									<input class="addTodoForm__radio addTodoForm__radio--high" type="radio"
-										id="high-priority-2" name="priority-2" value="high-priority" checked />
+										id="high-priority-2" name="priority-2" value="high-priority-2"  />
 									<label class="addTodoForm__radio-label addTodoForm__radio-label--sm"
 										for="high-priority-2">High</label>
 									<input class="addTodoForm__radio addTodoForm__radio--medium" type="radio"
-										id="medium-priority-2" value="medium-priority" name="priority-2" />
+										id="medium-priority-2" value="medium-priority-2" name="priority-2" />
 									<label class="addTodoForm__radio-label addTodoForm__radio-label--sm"
 										for="medium-priority-2">Medium</label>
 									<input class="addTodoForm__radio addTodoForm__radio--low" type="radio"
-										id="low-priority-2" value="low-priority" name="priority-2" />
+										id="low-priority-2" value="low-priority-2" name="priority-2" />
 									<label class="addTodoForm__radio-label addTodoForm__radio-label--sm"
 										for="low-priority-2">Low</label>
 								</div>
@@ -133,6 +133,20 @@ How are you?!</textarea>
 						</div>
 					</div>
 				</div>
+                <div class="modal-container">
+                    <div class="modal">
+                        <span class="modal__emoji"> 
+                            &#x1f97a;
+                        </span>
+                        <p class="modal__info">
+                            Uh-oh...Looks like you already have that todo.
+                        </p>
+                        <div class="modal__actions">
+                            <button class="question__cta">Really?</button>
+                            <button class="ok__cta">Ok, fine!</button>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</main>
 	</div>

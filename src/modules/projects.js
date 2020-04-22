@@ -1,36 +1,38 @@
-const Projects = (() => {
-	const getSelectedProject = () => {
-		return localStorage.getItem('selected');
-	};
+const getSelectedProject = () => {
+	return localStorage.getItem('selected');
+};
 
-	const selectProject = (projectTitle) => {
-		localStorage.setItem('selected', JSON.stringify(projectTitle));
-	};
+const selectProject = (projectTitle) => {
+	localStorage.setItem('selected', projectTitle);
+};
 
-	const getProjects = () => {
-		return localStorage.getItem('projects');
-	};
+const getProjects = () => {
+	return localStorage.getItem('projects');
+};
 
+const addProject = (projectTitle) => {
 	const projects = JSON.parse(getProjects());
+	const obj = {};
+	const todos = [];
 
-	const addProject = (projectTitle) => {
-		const obj = {};
-		const todos = [];
+	obj.title = projectTitle;
+	obj.todos = todos;
 
-		obj.title = projectTitle;
-		obj.todos = todos;
+	projects.push(obj);
 
-		projects.push(obj);
+	localStorage.setItem('projects', JSON.stringify(projects));
+};
+const removeProject = (projectTitle) => {
+	let projects = JSON.parse(getProjects());
 
-		localStorage.setItem('projects', JSON.stringify(projects));
-	};
+	projects = projects.filter((project) => project.title !== projectTitle);
 
-	return {
-		addProject,
-		selectProject,
-		getSelectedProject,
-		getProjects,
-	};
-})();
-
-export default Projects;
+	localStorage.setItem('projects', JSON.stringify(projects));
+};
+export {
+	addProject,
+	removeProject,
+	selectProject,
+	getSelectedProject,
+	getProjects,
+};

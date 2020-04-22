@@ -18,6 +18,7 @@
 
 .list {
     margin-top: 46px;
+    flex-grow: 1;
     &__item {
         border-radius: 6px;
         display: flex;
@@ -27,6 +28,7 @@
         color: $disabled-color;
         cursor: pointer;
         transition: all 150ms ease-in-out;
+        overflow: hidden;
         &:hover {
             background: $primary-color-light;
             color: $primary-color;
@@ -45,49 +47,9 @@
             background:$primary-color-light;
             color: $primary-color;
         }
-        .side-icon {
-            pointer-events: none;
-            font-size: 20px;
-        } 
-    }
-}
-
-.projects {
-    margin-top: 40px;
-    flex-grow: 1;
-    &__heading {
-        font-size: 19px;
-        font-weight: $bold;
-        color: $primary-color;
-    }
-}
-.projects-list {
-    margin-top: 25px;
-    &__item {
-        @extend .list__item;
-        overflow: hidden;
         &:hover .side-icon-delete {
             transform: translateX(0);
             pointer-events: all;
-        }
-        &:hover .circle-filled {
-            background: $primary-color;
-        }
-        &-text {
-            @extend .list__item-text;
-        }
-        &--active {
-            background: $primary-color-light;
-        }
-        &-count {
-            font-weight: $bold;
-        }
-        .circle-filled {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: $disabled-color;
-            transition: all 150ms ease-in-out;
         }
         .side-icon-delete {
             transition: transform 150ms ease-in-out;
@@ -95,8 +57,13 @@
             pointer-events: none;
             font-size: 20px;
         }
+        .side-icon {
+            pointer-events: none;
+            font-size: 20px;
+        } 
     }
 }
+
 .form {
     display: flex;
     flex-direction: column;

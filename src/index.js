@@ -1,9 +1,19 @@
 import flatpickr from 'flatpickr';
 import init from './modules/init';
-import DOMHelpers from './modules/dom-helpers';
 import DisplayController from './modules/display-controller';
-import Projects from './modules/projects';
 import Todos from './modules/todos';
+import { addProject, selectProject } from './modules/projects';
+import {
+	getElement,
+	showForm,
+	hideForm,
+	toggleClass,
+	clearFields,
+} from './modules/dom-helpers';
+
+const { renderMain, renderProjects, renderTodos } = DisplayController;
+
+const { addTodo } = Todos;
 
 // Start default projects
 init();
@@ -20,28 +30,6 @@ flatpickr('#due-2', {
 	altFormat: 'F j, Y',
 	dateFormat: 'Y-m-d',
 });
-const {
-	createElement,
-	getElement,
-	getElements,
-	showForm,
-	hideForm,
-	addClass,
-	removeClass,
-	toggleClass,
-	clearFields,
-} = DOMHelpers;
-
-const { addProject, selectProject, getSelectedProject } = Projects;
-const {
-	renderMain,
-	renderProjects,
-	hightlightProject,
-	renderTodos,
-	renderDefault,
-} = DisplayController;
-
-const { addTodo } = Todos;
 
 const addProjectBtn = getElement('.form__cta');
 const addProjectForm = getElement('.form');
@@ -51,25 +39,28 @@ const AddTodoFormCloseBtn = getElement('.addTodoForm__close');
 const formGroup = getElement('.form__group');
 const addTodoForm = getElement('.addTodoForm');
 
-addProjectBtn.on('click', (ev) => {
+addProjectBtn.addEventListener('click', (ev) => {
 	const childNode = ev.target.firstElementChild;
 	toggleClass(childNode, 'cta-icon--rotate');
 	toggleClass(formGroup, 'form__group--active');
 });
 
-addTodoBtn.on('click', () => showForm(addTodoFormContainer));
-AddTodoFormCloseBtn.on('click', () => hideForm(addTodoFormContainer));
+addTodoBtn.addEventListener('click', () => showForm(addTodoFormContainer));
+AddTodoFormCloseBtn.addEventListener('click', () =>
+	hideForm(addTodoFormContainer),
+);
 
 // Close todo form on Esc key
-window.on('keyup', (ev) => {
+window.addEventListener('keyup', (ev) => {
 	if (ev.keyCode === 27) {
 		hideForm(addTodoFormContainer);
 	}
 });
 
-addProjectForm.on('submit', (ev) => {
+addProjectForm.addEventListener('submit', (ev) => {
 	ev.preventDefault();
 	let inputValue = getElement('.form input').value;
+
 	addProject(inputValue);
 	renderProjects();
 	renderMain(inputValue);
@@ -77,7 +68,7 @@ addProjectForm.on('submit', (ev) => {
 	addProjectBtn.click();
 });
 
-addTodoForm.on('submit', (ev) => {
+addTodoForm.addEventListener('submit', (ev) => {
 	ev.preventDefault();
 	const obj = {};
 
@@ -89,21 +80,12 @@ addTodoForm.on('submit', (ev) => {
 	obj.isImportant = false;
 
 	addTodo(obj);
+	clearFields(addTodoForm);
 	hideForm(addTodoFormContainer);
 	renderTodos();
-	clearFields(addTodoForm);
 });
 
 if (localStorage.getItem('projects') !== null) {
-	renderDefault();
 	renderProjects();
 }
 
-const listItems = getElements('.list__item');
-listItems.on('click', ({ target }) => {
-	const { title } = target.dataset;
-	renderMain(title);
-	selectProject(title);
-	hightlightProject(target);
-	renderTodos();
-});
