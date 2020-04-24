@@ -62,9 +62,10 @@ addProjectForm.addEventListener('submit', (ev) => {
 	let inputValue = getElement('.form input').value;
 
 	addProject(inputValue);
+	selectProject(inputValue);
 	renderProjects();
 	renderMain(inputValue);
-	selectProject(inputValue);
+	renderTodos();
 	addProjectBtn.click();
 });
 
@@ -83,9 +84,9 @@ addTodoForm.addEventListener('submit', (ev) => {
 	clearFields(addTodoForm);
 	hideForm(addTodoFormContainer);
 	renderTodos();
+	renderProjects();
 });
 
 if (localStorage.getItem('projects') !== null) {
 	renderProjects();
 }
-

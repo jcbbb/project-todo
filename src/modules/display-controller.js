@@ -38,7 +38,10 @@ const DisplayConroller = (() => {
 		projectList.innerHTML = '';
 		projects.forEach((project, index) => {
 			const projectLi = createElement('li', {
-				class: 'list__item',
+				class:
+					getSelectedProject() === project.title
+						? 'list__item list__item--active'
+						: 'list__item',
 				id: index,
 				'data-title': project.title,
 			});
@@ -48,7 +51,6 @@ const DisplayConroller = (() => {
 						? `${icons[index]} side-icon`
 						: `${icons[3]} side-icon`,
 			});
-
 			const spanText = createElement('span', {
 				class: 'list__item-text',
 			});
@@ -66,25 +68,22 @@ const DisplayConroller = (() => {
 			spanText.textContent = project.title;
 
 			projectLi.addEventListener('click', () => {
+				console.log('Hey!');
 				renderMain(project.title);
 				selectProject(project.title);
 				hightlightProject(projectLi);
 				renderTodos();
 			});
+			projectLi.addEventListener('animationend', renderProjects);
 
-			/*
-			 * Continue from here!
-			 */
+			deleteIcon.addEventListener('click', (ev) => {
+				ev.stopPropagation();
 
-			projectLi.addEventListener('animationend', () => {
-				//renderProjects();
-				//renderMain(getSelectedProject());
-			});
-
-			deleteIcon.addEventListener('click', () => {
-				selectProject(projectLi.previousSibling.dataset.title);
-				//hightlightProject(projectLi.previousElementSibling);
 				addClass(projectLi, 'animated', 'bounceOutLeft');
+				selectProject(projectLi.previousSibling.dataset.title);
+				hightlightProject(projectLi.previousSibling);
+				renderMain(getSelectedProject());
+				renderTodos();
 				removeProject(project.title);
 			});
 
@@ -169,7 +168,11 @@ const DisplayConroller = (() => {
 			spanMark.append(favIcon);
 			spanDelete.append(trashIcon);
 			actionsDiv.append(spanMark, spanDelete);
-			detailsDiv.append(todoTitle, dateSpan);
+
+			// if date is not specified, don't render!
+			todo.due === ''
+				? detailsDiv.append(todoTitle)
+				: detailsDiv.append(todoTitle, dateSpan);
 			li.append(prioritySpan, detailsDiv, actionsDiv);
 
 			li.addEventListener('click', ({ target }) => {
@@ -178,6 +181,7 @@ const DisplayConroller = (() => {
 			});
 
 			li.addEventListener('animationend', renderTodos);
+
 			prioritySpan.addEventListener('click', ({ target }) => {
 				const todoItem = target.closest('.todos__list-item');
 				toggleCompleted(todoItem.dataset.title);
@@ -189,6 +193,7 @@ const DisplayConroller = (() => {
 				const todoItem = target.closest('.todos__list-item');
 				addClass(todoItem, 'animated', 'bounceOutLeft');
 				removeTodo(todoItem.dataset.title);
+				renderProjects();
 			});
 
 			spanMark.addEventListener('click', ({ target }) => {

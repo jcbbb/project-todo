@@ -1,5 +1,5 @@
 import { addClass, getElement, getElements } from './dom-helpers.js';
-import { selectProject } from './projects.js';
+import { getSelectedProject } from './projects.js';
 import DisplayConroller from './display-controller.js';
 
 const { renderMain, renderTodos, hightlightProject } = DisplayConroller;
@@ -31,18 +31,18 @@ const init = () => {
 		listItems.forEach((item) => {
 			if (item.dataset.title === selected) {
 				addClass(item, 'list__item--active');
-				addClass(item.firstElementChild, 'circle-filled--active');
 				renderMain(item.dataset.title);
 				renderTodos();
 			}
 		});
 
-		const observerCallback = (mutations) => {
+		const observerCallback = (mutations, observer) => {
 			mutations.forEach((mutation) => {
 				const target = mutation.target.lastElementChild;
-
-				selectProject(target.innerText);
-				hightlightProject(target);
+				if (target.innerText === getSelectedProject()) {
+					hightlightProject(target);
+				}
+				observer.disconnect();
 			});
 		};
 
