@@ -1,10 +1,7 @@
 import { formatDate } from 'flatpickr';
-import Todos from './todos.js';
-import {
-	selectProject,
-	removeProject,
-	getSelectedProject,
-} from './projects.js';
+import Todos from './todos';
+import { selectProject, removeProject, getSelectedProject } from './projects';
+
 import {
 	createElement,
 	getElement,
@@ -13,43 +10,26 @@ import {
 	getSiblings,
 	toggleClass,
 	toggleClasses,
-} from './dom-helpers.js';
+} from './dom-helpers';
 
-const {
-	getTodos,
-	selectTodo,
-	toggleCompleted,
-	removeTodo,
-	markImportant,
-} = Todos;
+const { getTodos, selectTodo, toggleCompleted, removeTodo, markImportant } = Todos;
 
 const DisplayConroller = (() => {
 	const renderProjects = () => {
 		// Side icons for projects
-		const icons = [
-			'uil uil-apps',
-			'uil uil-calendar-alt',
-			'uil uil-favorite',
-			'uil uil-clipboard-notes',
-		];
+		const icons = ['uil uil-apps', 'uil uil-calendar-alt', 'uil uil-favorite', 'uil uil-clipboard-notes'];
 
 		const projects = JSON.parse(localStorage.getItem('projects'));
 		const projectList = getElement('.list');
 		projectList.innerHTML = '';
 		projects.forEach((project, index) => {
 			const projectLi = createElement('li', {
-				class:
-					getSelectedProject() === project.title
-						? 'list__item list__item--active'
-						: 'list__item',
+				class: getSelectedProject() === project.title ? 'list__item list__item--active' : 'list__item',
 				id: index,
 				'data-title': project.title,
 			});
 			const spanIcon = createElement('span', {
-				class:
-					index < 3
-						? `${icons[index]} side-icon`
-						: `${icons[3]} side-icon`,
+				class: index < 3 ? `${icons[index]} side-icon` : `${icons[3]} side-icon`,
 			});
 			const spanText = createElement('span', {
 				class: 'list__item-text',
@@ -63,12 +43,10 @@ const DisplayConroller = (() => {
 				class: 'uil uil-times side-icon-delete',
 			});
 
-			spanCount.textContent =
-				project.todos.length >= 1 ? project.todos.length : '';
+			spanCount.textContent = project.todos.length >= 1 ? project.todos.length : '';
 			spanText.textContent = project.title;
 
 			projectLi.addEventListener('click', () => {
-				console.log('Hey!');
 				renderMain(project.title);
 				selectProject(project.title);
 				hightlightProject(projectLi);
@@ -87,9 +65,12 @@ const DisplayConroller = (() => {
 				removeProject(project.title);
 			});
 
-			index < 3
-				? projectLi.append(spanIcon, spanText, spanCount)
-				: projectLi.append(spanIcon, spanText, spanCount, deleteIcon);
+			// Don't render delete icon for default projects
+			if (index < 3) {
+				projectLi.append(spanIcon, spanText, spanCount);
+			} else {
+				projectLi.append(spanIcon, spanText, spanCount, deleteIcon);
+			}
 
 			projectList.append(projectLi);
 		});
@@ -124,15 +105,11 @@ const DisplayConroller = (() => {
 				'data-title': todo.title,
 			});
 			const prioritySpan = createElement('span', {
-				class: todo.completed
-					? `${todo.priority} completed`
-					: todo.priority,
+				class: todo.completed ? `${todo.priority} completed` : todo.priority,
 			});
 
 			const detailsDiv = createElement('div', {
-				class: todo.completed
-					? 'todos__list-details line-through'
-					: 'todos__list-details',
+				class: todo.completed ? 'todos__list-details line-through' : 'todos__list-details',
 			});
 			const todoTitle = createElement('p', {
 				class: 'todos__list-title',
@@ -141,9 +118,7 @@ const DisplayConroller = (() => {
 				class: 'todos__list-date',
 			});
 			const actionsDiv = createElement('div', {
-				class: todo.completed
-					? 'todos__list-actions line-through'
-					: 'todos__list-actions',
+				class: todo.completed ? 'todos__list-actions line-through' : 'todos__list-actions',
 			});
 			const spanMark = createElement('span', {
 				class: 'todos__action-mark',
@@ -154,9 +129,7 @@ const DisplayConroller = (() => {
 
 			// icons
 			const favIcon = createElement('i', {
-				class: todo.isImportant
-					? 'uim uim-favorite'
-					: 'uil uil-favorite',
+				class: todo.isImportant ? 'uim uim-favorite' : 'uil uil-favorite',
 			});
 			const trashIcon = createElement('i', { class: 'uil uil-trash' });
 
@@ -170,9 +143,7 @@ const DisplayConroller = (() => {
 			actionsDiv.append(spanMark, spanDelete);
 
 			// if date is not specified, don't render!
-			todo.due === ''
-				? detailsDiv.append(todoTitle)
-				: detailsDiv.append(todoTitle, dateSpan);
+			todo.due === '' ? detailsDiv.append(todoTitle) : detailsDiv.append(todoTitle, dateSpan);
 			li.append(prioritySpan, detailsDiv, actionsDiv);
 
 			li.addEventListener('click', ({ target }) => {
@@ -180,7 +151,12 @@ const DisplayConroller = (() => {
 				selectTodo(title);
 			});
 
-			li.addEventListener('animationend', renderTodos);
+			li.addEventListener('animationend', (ev) => {
+				if (ev.animationName === 'lineAnimation' || ev.animationName === 'bounceIn') {
+					return;
+				}
+				renderTodos();
+			});
 
 			prioritySpan.addEventListener('click', ({ target }) => {
 				const todoItem = target.closest('.todos__list-item');

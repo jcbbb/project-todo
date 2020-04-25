@@ -46,9 +46,9 @@ addProjectBtn.addEventListener('click', (ev) => {
 });
 
 addTodoBtn.addEventListener('click', () => showForm(addTodoFormContainer));
-AddTodoFormCloseBtn.addEventListener('click', () =>
-	hideForm(addTodoFormContainer),
-);
+AddTodoFormCloseBtn.addEventListener('click', () => {
+	hideForm(addTodoFormContainer);
+});
 
 // Close todo form on Esc key
 window.addEventListener('keyup', (ev) => {
@@ -59,13 +59,14 @@ window.addEventListener('keyup', (ev) => {
 
 addProjectForm.addEventListener('submit', (ev) => {
 	ev.preventDefault();
-	let inputValue = getElement('.form input').value;
+	const inputValue = getElement('.form input').value;
 
 	addProject(inputValue);
 	selectProject(inputValue);
 	renderProjects();
 	renderMain(inputValue);
 	renderTodos();
+	clearFields(addProjectForm);
 	addProjectBtn.click();
 });
 
