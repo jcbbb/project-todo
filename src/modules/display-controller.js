@@ -187,10 +187,14 @@ const DisplayConroller = (() => {
 			spanDelete.addEventListener('click', (ev) => {
 				ev.stopPropagation();
 
+				const selected = JSON.parse(getSelectedTodo());
 				const todoItem = ev.target.closest('.todos__list-item');
 				addClass(todoItem, 'animated', 'bounceOutLeft');
 				removeTodo(todoItem.dataset.title);
 				renderProjects();
+				if (selected.todo.title === todoItem.dataset.title) {
+					removeClass(getElement('.todo-details'), 'todo-details--active');
+				}
 			});
 
 			spanMark.addEventListener('click', (ev) => {
