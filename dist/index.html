@@ -5,10 +5,10 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Todoooo</title>
-	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.5/css/unicons.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 	<link rel="stylesheet" href="./css/main.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.1.45/css/materialdesignicons.min.css" integrity="sha256-G4TgnFp8NGLxwJvQ8EItEIvmOSodz0gkhDDZ8gOQfrg=" crossorigin="anonymous" />
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 						<label for="new-porject" class="form__label">New project</label>
 					</div>
 					<button type="button" class="form__cta">
-						<i class="uil uil-plus cta-icon"></i>
+						<i class="mdi mdi-plus cta-icon"></i>
 					</button>
 				</form>
 			</aside>
@@ -49,41 +49,42 @@
 					<div class="todo-details">
 						<div class="todo-details__top">
 							<p class="todo-details__heading">
-								Sell a lot of goods
-							</p>
-							<span class="todos__action-delete">
-								<i class="uil uil-trash"></i>
-							</span>
-							<span class="todos__action-mark">
-								<i class="uil uil-favorite"></i>
-							</span>
+							</p> 
+							<div class="todo-details__actions">
+								<span class="todos__action-mark mark">
+									<i class="mdi mdi-star"></i>
+								</span>
+								<span class="todos__action-delete">
+									<i class="mdi mdi-trash-can-outline"></i>
+								</span>
+							</div>
 						</div>
 						<div class="todo-details__content">
 							<form class="todo-details__form">
 								<div class="form-group">
 									<label for="due-2" class="form-group__label">Due</label>
-									<input class="form-group__input" type="text" value="2020-04-25" name="due-2"
+									<input class="form-group__input" type="text" name="due-2"
 										id="due-2" />
 								</div>
 								<div class="form-group">
 									<label class="form-group__label">Priority</label>
 									<input class="addTodoForm__radio addTodoForm__radio--high" type="radio"
-										id="high-priority-2" name="priority-2" value="high-priority-2"  />
+										id="high-priority-2" name="priority-2" value="high-priority"  />
 									<label class="addTodoForm__radio-label addTodoForm__radio-label--sm"
 										for="high-priority-2">High</label>
 									<input class="addTodoForm__radio addTodoForm__radio--medium" type="radio"
-										id="medium-priority-2" value="medium-priority-2" name="priority-2" />
+										id="medium-priority-2" value="medium-priority" name="priority-2" />
 									<label class="addTodoForm__radio-label addTodoForm__radio-label--sm"
 										for="medium-priority-2">Medium</label>
 									<input class="addTodoForm__radio addTodoForm__radio--low" type="radio"
-										id="low-priority-2" value="low-priority-2" name="priority-2" />
+										id="low-priority-2" value="low-priority" name="priority-2" />
 									<label class="addTodoForm__radio-label addTodoForm__radio-label--sm"
 										for="low-priority-2">Low</label>
 								</div>
 								<div class="form-group">
 									<label for="description-2" class="form-group__label">Description</label>
-									<textarea class="form-group__textarea" name="description" id="description-2">
-How are you?!</textarea>
+									<textarea class="form-group__textarea" name="description-2" id="description-2">
+</textarea>
 								</div>
 							</form>
 						</div>
@@ -91,7 +92,7 @@ How are you?!</textarea>
 
 					<div class="addTodoFormContainer">
 						<div class="form-wrapper">
-							<i class="uil uil-times addTodoForm__close"></i>
+							<i class="mdi mdi-close addTodoForm__close"></i>
 							<h2 class="addTodoForm__heading">Add a todo</h2>
 							<form class="addTodoForm">
 								<div class="addTodoForm__group">
@@ -134,7 +135,6 @@ How are you?!</textarea>
                             &#x1f97a;
                         </span>
                         <p class="modal__info">
-                            Uh-oh...Looks like you already have that todo.
                         </p>
                         <div class="modal__actions">
                             <button class="question__cta">Really?</button>

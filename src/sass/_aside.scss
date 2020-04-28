@@ -17,8 +17,8 @@
 }
 
 .list {
-    margin-top: 46px;
-    flex-grow: 1;
+	margin-top: 46px;
+	flex-grow: 1;
     &__item {
         border-radius: 6px;
         display: flex;
@@ -59,9 +59,9 @@
         }
         .side-icon {
             pointer-events: none;
-            font-size: 20px;
+			font-size: 22px;
         } 
-    }
+	}
 }
 
 .form {

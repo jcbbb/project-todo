@@ -5,19 +5,25 @@ import { selectProject, removeProject, getSelectedProject } from './projects';
 import {
 	createElement,
 	getElement,
+	getElements,
 	addClass,
 	removeClass,
-	getSiblings,
+	removeClassFromSiblings,
 	toggleClass,
 	toggleClasses,
 } from './dom-helpers';
 
-const { getTodos, selectTodo, toggleCompleted, removeTodo, markImportant } = Todos;
+const { getTodos, getSelectedTodo, selectTodo, toggleCompletedTodo, removeTodo, markImportant } = Todos;
 
 const DisplayConroller = (() => {
 	const renderProjects = () => {
 		// Side icons for projects
-		const icons = ['uil uil-apps', 'uil uil-calendar-alt', 'uil uil-favorite', 'uil uil-clipboard-notes'];
+		const icons = [
+			'view-grid-outline',
+			'calendar-month-outline',
+			'calendar-month-outline',
+			'clipboard-check-outline',
+		];
 
 		const projects = JSON.parse(localStorage.getItem('projects'));
 		const projectList = getElement('.list');
@@ -28,8 +34,8 @@ const DisplayConroller = (() => {
 				id: index,
 				'data-title': project.title,
 			});
-			const spanIcon = createElement('span', {
-				class: index < 3 ? `${icons[index]} side-icon` : `${icons[3]} side-icon`,
+			const spanIcon = createElement('i', {
+				class: index < 3 ? `mdi mdi-${icons[index]} side-icon` : `mdi mdi-${icons[3]} side-icon`,
 			});
 			const spanText = createElement('span', {
 				class: 'list__item-text',
@@ -39,8 +45,8 @@ const DisplayConroller = (() => {
 				class: 'list__item-count',
 			});
 
-			const deleteIcon = createElement('i', {
-				class: 'uil uil-times side-icon-delete',
+			const deleteIcon = createElement('ion-icon', {
+				class: 'mdi mdi-close side-icon-delete',
 			});
 
 			spanCount.textContent = project.todos.length >= 1 ? project.todos.length : '';
@@ -82,15 +88,9 @@ const DisplayConroller = (() => {
 	};
 
 	const hightlightProject = (target) => {
-		const siblings = getSiblings(target);
-
-		siblings.forEach((sibling) => {
-			removeClass(sibling, 'list__item--active');
-			removeClass(sibling.firstElementChild, 'circle-filled--active');
-		});
+		removeClassFromSiblings(target, 'list__item--active');
 
 		addClass(target, 'list__item--active');
-		addClass(target.firstElementChild, 'circle-filled--active');
 	};
 
 	const renderTodos = () => {
@@ -129,9 +129,9 @@ const DisplayConroller = (() => {
 
 			// icons
 			const favIcon = createElement('i', {
-				class: todo.isImportant ? 'uim uim-favorite' : 'uil uil-favorite',
+				class: todo.isImportant ? 'mdi mdi-star' : 'mdi mdi-star-outline',
 			});
-			const trashIcon = createElement('i', { class: 'uil uil-trash' });
+			const trashIcon = createElement('i', { class: 'mdi mdi-trash-can-outline' });
 
 			// TextContents
 			todoTitle.textContent = todo.title;
@@ -143,12 +143,29 @@ const DisplayConroller = (() => {
 			actionsDiv.append(spanMark, spanDelete);
 
 			// if date is not specified, don't render!
-			todo.due === '' ? detailsDiv.append(todoTitle) : detailsDiv.append(todoTitle, dateSpan);
+			if (todo.due === '') {
+				detailsDiv.append(todoTitle);
+			} else {
+				detailsDiv.append(todoTitle, dateSpan);
+			}
+
 			li.append(prioritySpan, detailsDiv, actionsDiv);
 
+			let clicks = 0;
 			li.addEventListener('click', ({ target }) => {
+				clicks += 1;
 				const { title } = target.dataset;
 				selectTodo(title);
+
+				removeClassFromSiblings(target, 'selected');
+				addClass(target, 'selected');
+				addClass(getElement('.todo-details'), 'todo-details--active');
+				if (clicks > 1) {
+					removeClass(getElement('.todo-details'), 'todo-details--active');
+					clicks = 0;
+				}
+
+				renderTodoDetails();
 			});
 
 			li.addEventListener('animationend', (ev) => {
@@ -158,26 +175,64 @@ const DisplayConroller = (() => {
 				renderTodos();
 			});
 
-			prioritySpan.addEventListener('click', ({ target }) => {
-				const todoItem = target.closest('.todos__list-item');
-				toggleCompleted(todoItem.dataset.title);
+			prioritySpan.addEventListener('click', (ev) => {
+				ev.stopPropagation();
+
+				const todoItem = ev.target.closest('.todos__list-item');
+				toggleCompletedTodo(todoItem.dataset.title);
 				toggleLinethrough(todoItem);
-				toggleCheckmark(target);
+				toggleIcon(ev.target, 'completed');
 			});
 
-			spanDelete.addEventListener('click', ({ target }) => {
-				const todoItem = target.closest('.todos__list-item');
+			spanDelete.addEventListener('click', (ev) => {
+				ev.stopPropagation();
+
+				const todoItem = ev.target.closest('.todos__list-item');
 				addClass(todoItem, 'animated', 'bounceOutLeft');
 				removeTodo(todoItem.dataset.title);
 				renderProjects();
 			});
 
-			spanMark.addEventListener('click', ({ target }) => {
-				const todoItem = target.closest('.todos__list-item');
+			spanMark.addEventListener('click', (ev) => {
+				ev.stopPropagation();
+
+				const child = ev.target.childNodes[0];
+				const todoItem = ev.target.closest('.todos__list-item');
 				markImportant(todoItem.dataset.title);
+				toggleIcon(child, 'marked');
+				renderTodoDetails();
 			});
 
 			ul.append(li);
+		});
+	};
+
+	const renderTodoDetails = () => {
+		const selected = JSON.parse(getSelectedTodo());
+		const todoHeading = getElement('.todo-details__heading');
+		const spanMark = getElement('.mark i');
+		const todoDue = getElement('input[name="due-2"]');
+		const todoPriority = getElement(`input[value=${selected.todo.priority}]`);
+		const todoDescription = getElement('textarea[name="description-2"]');
+
+		todoHeading.textContent = selected.todo.title;
+		spanMark.className = selected.todo.isImportant ? 'mdi mdi-star' : 'mdi mdi-star-outline';
+		todoDue.value = formatDate(new Date(selected.todo.due), 'F j, Y');
+		todoPriority.checked = true;
+		todoDescription.textContent = selected.todo.description;
+	};
+
+	const renderFilteredTodos = (searchTerm) => {
+		const todos = getElements('.todos__list-item');
+
+		todos.forEach((todo) => {
+			const { title } = todo.dataset;
+
+			if (title.toLowerCase().indexOf(searchTerm) > -1) {
+				todo.style.display = 'flex';
+			} else {
+				todo.style.display = 'none';
+			}
 		});
 	};
 
@@ -188,15 +243,18 @@ const DisplayConroller = (() => {
 		});
 	};
 
-	const toggleCheckmark = (target) => {
-		toggleClasses(target, 'completed', 'animated', 'bounceIn');
+	const toggleIcon = (target, classToToggle) => {
+		toggleClasses(target, classToToggle, 'animated', 'bounceIn');
 	};
 
 	return {
 		renderProjects,
 		renderMain,
 		renderTodos,
+		renderFilteredTodos,
+		renderTodoDetails,
 		hightlightProject,
+		toggleIcon,
 	};
 })();
 

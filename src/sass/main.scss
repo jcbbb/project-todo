@@ -57,7 +57,8 @@ main {
     min-height: calc(100% - 57px);
 }
 .todo-details {
-    width: 500px;
+	max-width: 340px;
+	min-width: 340px;
     background: #fff;
     padding: 38px 30px;
     margin-left: 30px;
@@ -66,14 +67,18 @@ main {
         display: block;
     }
     &__top {
+		max-width: 100%;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
     }
     &__heading {
-        font-size: 24px;
+        font-size: 20px;
         font-weight: $bold;
         color: $primary-text-color;
+		flex-grow: 1;
+		max-width: 50%;
+		word-wrap: break-word;
     }
     &__content {
         margin-top: 30px;       
@@ -144,6 +149,18 @@ main {
         width: 100%;
         cursor: pointer;
         margin-bottom: 25px;
+		border-radius: 6px;
+		border: 1px solid transparent;
+		transition: all 200ms ease-in-out;
+		&:hover {
+			border-color: $disabled-color;
+			box-shadow: none;
+		}
+		&.selected {
+			border-color: $disabled-color;
+			box-shadow: none;
+			
+		}
         .high-priority {
             width: 26px;
             height: 26px;
@@ -154,7 +171,6 @@ main {
             display: flex;
             align-items: center;
             justify-content:center;
-           
         }
         .medium-priority {
             @extend .high-priority;
@@ -171,6 +187,7 @@ main {
             display: flex;
             flex-direction: column;
             margin-left: 15px;
+			pointer-events: none;
         }
         &__list-title {
             font-size: 20px;
@@ -191,7 +208,10 @@ main {
             height: 45px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 26px;
+			i {
+				pointer-events: none;
+			}
             &:hover {
                 background: $priority-color-yellow-light;
         }
@@ -358,13 +378,16 @@ main {
     font-size: 20px;
     border-color: #00B1D2 !important;
     border-radius: 50%;         
-    &:before {
-        content: '\e8dc';
-        font-family: 'unicons';
-        font-weight: 400;
-        display: inline-block;
-        width: 1em;
-    }
+	&:before {
+		content: '\F012C';
+		font-family: 'Material Design Icons';
+	}
+}
+.marked {
+	&:before {
+		content: '\F04CE' !important;
+		font-family: 'Material Design Icons';
+	}
 }
 
 .modal-container {
@@ -405,6 +428,7 @@ main {
             padding: 10px;
             background: $primary-color;
             color: #fff;
+			border-radius: 0 0 6px 0;
             &:hover {
                 background: $primary-color-dark;
             }
@@ -412,6 +436,7 @@ main {
         .question__cta {
             color: $primary-text-color;
             background: #fff;
+			border-radius: 0 0 0 6px;
             &:hover {
                 background: $disabled-color-light;
             }

@@ -1,8 +1,8 @@
-import { addClass, getElement, getElements } from './dom-helpers.js';
-import { getSelectedProject } from './projects.js';
-import DisplayConroller from './display-controller.js';
+import { addClass, getElement, getElements } from './dom-helpers';
+import { getSelectedProject } from './projects';
+import DisplayConroller from './display-controller';
 
-const { renderMain, renderTodos, hightlightProject } = DisplayConroller;
+const { renderMain, renderTodos, renderTodoDetails, hightlightProject } = DisplayConroller;
 const init = () => {
 	const projects = [
 		{
@@ -46,6 +46,7 @@ const init = () => {
 			});
 		};
 
+		// init observer
 		const observer = new MutationObserver(observerCallback);
 		const target = getElement('.list');
 		observer.observe(target, {

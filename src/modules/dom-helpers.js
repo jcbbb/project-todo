@@ -11,11 +11,9 @@ const getElement = (element) => document.querySelector(element);
 
 const getElements = (elements) => document.querySelectorAll(elements);
 
-const addClass = (element, ...classNames) =>
-	element.classList.add(...classNames);
+const addClass = (element, ...classNames) => element.classList.add(...classNames);
 
-const removeClass = (element, ...classNames) =>
-	element.classList.remove(...classNames);
+const removeClass = (element, ...classNames) => element.classList.remove(...classNames);
 
 const toggleClass = (element, className) => element.classList.toggle(className);
 
@@ -27,6 +25,18 @@ const showForm = (form) => {
 };
 const hideForm = (form) => {
 	removeClass(form, 'form-active');
+};
+
+const showModal = (modal, message, unicode) => {
+	addClass(modal, 'modal-active');
+	const messageContainer = getElement('.modal__info');
+	const emojiContainer = getElement('.modal__emoji');
+
+	messageContainer.textContent = message;
+	emojiContainer.innerHTML = unicode;
+};
+const hideModal = (modal) => {
+	removeClass(modal, 'modal-active');
 };
 
 const getSiblings = (elem) => {
@@ -43,12 +53,16 @@ const getSiblings = (elem) => {
 	return siblings;
 };
 
+const removeClassFromSiblings = (elem, classToRemove) => {
+	const siblings = getSiblings(elem);
+
+	siblings.forEach((sibling) => {
+		removeClass(sibling, classToRemove);
+	});
+};
 const clearFields = (form) => {
 	[...form.elements].forEach((element) => {
-		if (
-			(element.nodeName === 'INPUT' && element.type === 'text') ||
-			element.nodeName === 'TEXTAREA'
-		) {
+		if ((element.nodeName === 'INPUT' && element.type === 'text') || element.nodeName === 'TEXTAREA') {
 			element.value = '';
 		}
 	});
@@ -65,5 +79,8 @@ export {
 	showForm,
 	hideForm,
 	getSiblings,
+	removeClassFromSiblings,
 	clearFields,
+	showModal,
+	hideModal,
 };

@@ -1,14 +1,8 @@
-const getSelectedProject = () => {
-	return localStorage.getItem('selected');
-};
+const getSelectedProject = () => localStorage.getItem('selected');
 
-const selectProject = (projectTitle) => {
-	localStorage.setItem('selected', projectTitle);
-};
+const selectProject = (projectTitle) => localStorage.setItem('selected', projectTitle);
 
-const getProjects = () => {
-	return localStorage.getItem('projects');
-};
+const getProjects = () => localStorage.getItem('projects');
 
 const addProject = (projectTitle) => {
 	const projects = JSON.parse(getProjects());
@@ -29,10 +23,4 @@ const removeProject = (projectTitle) => {
 
 	localStorage.setItem('projects', JSON.stringify(projects));
 };
-export {
-	addProject,
-	removeProject,
-	selectProject,
-	getSelectedProject,
-	getProjects,
-};
+export { addProject, removeProject, selectProject, getSelectedProject, getProjects };

@@ -1,41 +1,58 @@
-import { getSelectedProject, getProjects } from './projects.js';
+import { getSelectedProject, getProjects } from './projects';
 
 const Todos = (() => {
 	const getTodos = () => {
 		let todos;
 
 		const selected = getSelectedProject();
-		const projects = JSON.parse(getProjects());
-		for (let key in projects) {
-			if (projects[key].title === selected) {
-				todos = projects[key].todos;
+		const allProjects = JSON.parse(getProjects());
+		Object.entries(allProjects).forEach(([, project]) => {
+			if (project.title === selected) {
+				todos = project.todos;
 			}
-		}
+		});
+
 		return todos;
 	};
 
 	const addTodo = (todo) => {
+		if (existingTodo(todo.title)) throw new Error('Todo already exists');
+
 		const allProjects = JSON.parse(getProjects());
 		const selected = getSelectedProject();
 
-		for (let key in allProjects) {
-			if (allProjects[key].title === selected) {
-				allProjects[key].todos.push(todo);
+		Object.entries(allProjects).forEach(([, project]) => {
+			if (project.title === selected) {
+				project.todos.push(todo);
 			}
-		}
+		});
 
 		localStorage.setItem('projects', JSON.stringify(allProjects));
 	};
 
+	const existingTodo = (todoTitle) => {
+		const allProjects = JSON.parse(getProjects());
+		let exists = false;
+		Object.entries(allProjects).forEach(([, project]) => {
+			const { todos } = project;
+
+			todos.forEach((todo) => {
+				if (todo.title === todoTitle) exists = true;
+			});
+		});
+		return exists;
+	};
+
 	const selectTodo = (todoTitle) => {
-		const selectedTodo = {};
+		const selectedTodo = { title: '', todo: {} };
 		const selected = getSelectedProject();
 		const allProjects = JSON.parse(getProjects());
 
 		selectedTodo.title = selected;
-		for (let key in allProjects) {
-			if (allProjects[key].title === selected) {
-				const todos = allProjects[key].todos;
+
+		Object.entries(allProjects).forEach(([, project]) => {
+			if (project.title === selected) {
+				const { todos } = project;
 
 				todos.forEach((todo) => {
 					if (todo.title === todoTitle) {
@@ -43,59 +60,133 @@ const Todos = (() => {
 					}
 				});
 			}
-		}
+		});
 
 		localStorage.setItem('selectedTodo', JSON.stringify(selectedTodo));
 	};
 
-	const toggleCompleted = (todoTitle) => {
+	const getSelectedTodo = () => localStorage.getItem('selectedTodo');
+
+	const toggleCompletedTodo = (todoTitle) => {
 		const allProjects = JSON.parse(getProjects());
 
-		for (let key in allProjects) {
-			const todos = allProjects[key].todos;
+		Object.entries(allProjects).forEach(([, project]) => {
+			const { todos } = project;
 
 			todos.forEach((todo) => {
 				if (todo.title === todoTitle) {
 					todo.completed = !todo.completed;
 				}
 			});
-		}
+		});
 
 		localStorage.setItem('projects', JSON.stringify(allProjects));
 	};
 
 	const removeTodo = (todoTitle) => {
 		const allProjects = JSON.parse(getProjects());
-		for (let key in allProjects) {
-			allProjects[key].todos = allProjects[key].todos.filter(
-				(todo) => todo.title !== todoTitle,
-			);
-		}
+
+		Object.entries(allProjects).forEach(([, project]) => {
+			project.todos = project.todos.filter((todo) => todo.title !== todoTitle);
+		});
 
 		localStorage.setItem('projects', JSON.stringify(allProjects));
 	};
 
 	const markImportant = (todoTitle) => {
+		const selected = JSON.parse(getSelectedTodo());
+		selected.todo.isImportant = !selected.todo.isImportant;
+
 		const allProjects = JSON.parse(getProjects());
-		for (let key in allProjects) {
-			const todos = allProjects[key].todos;
+		Object.entries(allProjects).forEach(([, project]) => {
+			const { todos } = project;
 
 			todos.forEach((todo) => {
 				if (todo.title === todoTitle) {
 					todo.isImportant = !todo.isImportant;
 				}
 			});
-		}
+		});
+
+		localStorage.setItem('projects', JSON.stringify(allProjects));
+		localStorage.setItem('selectedTodo', JSON.stringify(selected));
+	};
+
+	const getTodoDetails = (todoTitle) => {
+		const allProjects = JSON.parse(getProjects());
+		Object.entries(allProjects).forEach(([, project]) => {
+			const { todos } = project;
+
+			todos.forEach((todo) => {
+				if (todo.title === todoTitle) {
+					return todo;
+				}
+			});
+		});
+	};
+
+	const handleDueUpdate = (newDue) => {
+		const selected = JSON.parse(getSelectedTodo());
+		const allProjects = JSON.parse(getProjects());
+
+		Object.entries(allProjects).forEach(([, project]) => {
+			const { todos } = project;
+
+			todos.forEach((todo) => {
+				if (todo.title === selected.todo.title) {
+					todo.due = newDue;
+				}
+			});
+		});
 
 		localStorage.setItem('projects', JSON.stringify(allProjects));
 	};
+
+	const handlePriorityUpdate = (newPriority) => {
+		const selected = JSON.parse(getSelectedTodo());
+		const allProjects = JSON.parse(getProjects());
+		Object.entries(allProjects).forEach(([, project]) => {
+			const { todos } = project;
+
+			todos.forEach((todo) => {
+				if (todo.title === selected.todo.title) {
+					todo.priority = newPriority;
+				}
+			});
+		});
+
+		localStorage.setItem('projects', JSON.stringify(allProjects));
+	};
+
+	const handleDescriptionUpdate = (newDescription) => {
+		const selected = JSON.parse(getSelectedTodo());
+		const allProjects = JSON.parse(getProjects());
+
+		Object.entries(allProjects).forEach(([, project]) => {
+			const { todos } = project;
+
+			todos.forEach((todo) => {
+				if (todo.title === selected.todo.title) {
+					todo.description = newDescription;
+				}
+			});
+		});
+
+		localStorage.setItem('projects', JSON.stringify(allProjects));
+	};
+
 	return {
 		getTodos,
 		addTodo,
 		selectTodo,
-		toggleCompleted,
+		getSelectedTodo,
+		toggleCompletedTodo,
 		removeTodo,
 		markImportant,
+		getTodoDetails,
+		handleDueUpdate,
+		handlePriorityUpdate,
+		handleDescriptionUpdate,
 	};
 })();
 
