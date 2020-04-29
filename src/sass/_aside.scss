@@ -15,7 +15,23 @@
         font-weight: $bold;
     }
 }
-
+.chevron-icon {
+	display: none;
+	color: $primary-color;
+	font-size: 24px;
+	width: 40px;
+	height: 40px;
+	text-align:right;
+	line-height: 40px;
+	border-radius: 50%;
+	background:$primary-color-light;
+	position: absolute;
+	top: 50%;
+	left: -20px;
+	transform: translateY(-505);
+	z-index: 1;
+	transition: all 200ms ease-in-out;
+}
 .list {
 	margin-top: 46px;
 	flex-grow: 1;
@@ -71,7 +87,7 @@
     &__group {
         position: relative;
         transform: scaleX(0);
-        transition: transform 100ms ease-in-out;
+        transition: transform 200ms ease-in-out;
         transform-origin: left;
         &--active {
             transform: scaleX(1);
@@ -80,7 +96,7 @@
     &__input {
         width: 250px;
         padding: 12px 8px;
-        font-size: 19px;
+        font-size: 18px;
         border-radius: 6px;
         border: 1px solid transparent;
         outline: none;
@@ -98,8 +114,9 @@
         font-weight: $bold;
         font-size: 17px;
         left: 8px;
-        top: 14px;
+        top: 12px;
         transition: all 100ms ease-in-out;
+		pointer-events: none;
     }
     &__cta {
         background: $primary-color;
@@ -124,4 +141,96 @@
             transform: rotate(45deg);
         }
     }
+}
+
+
+@media only screen and (max-width:768px) {
+	.logo {
+		pointer-events: none;
+		opacity: 0;
+		transition: all 200ms ease-in-out;
+	}
+	.aside {
+		position: absolute;
+		top:0;
+		left: 0;
+		width: 55px;
+		padding: 20px 0;	
+		z-index: 2;
+		background: #fff;
+		transition: all 200ms ease-in-out;
+		&--active {
+			width: 280px;
+			padding: 20px 15px;
+			.list {
+				&__item {
+					margin-bottom: 15px;
+					&-text {
+						opacity: 1;
+					}
+				}
+			}
+			.logo {
+				pointer-events: all;
+				opacity: 1;
+			}
+			.form {
+				&__label {
+					position: absolute;
+					color: $primary-color;
+					font-weight: $bold;
+					font-size: 17px;
+					left: 8px;
+					top: 10px;
+					transition: all 100ms ease-in-out;
+				}
+			}
+		}
+	}	
+
+	.list {
+		&__item {
+			border-radius: 0;
+        	margin-bottom: 0;
+			&-text {
+				opacity: 0;
+			}
+		}
+	}
+	.form {
+		&__cta {
+			width: 40px;
+			height: 40px;
+		}	
+		&__input {
+			width: 250px;
+			padding: 10px 8px;
+			font-size: 18px;
+		}
+	}
+}
+@media only screen and (max-width: 480px) {
+	.chevron-icon {
+		display: inline-block;
+		i {
+			pointer-events: none;
+		}
+		&--active {
+			left: 35px;
+		}
+		&--left {
+			&:before {
+				content: '\F0141' !important;
+				font-family: 'Material Design Icons';
+				font-style: normal;
+			}
+		}
+	}
+	.aside {
+		left: -100px;
+		&--active-small {
+			left: 0;
+		}
+	}
+
 }

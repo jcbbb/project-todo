@@ -11,12 +11,15 @@ import {
 	showModal,
 	hideModal,
 	toggleClass,
+	removeClass,
+	addClass,
 	clearFields,
+	toggleClasses,
 } from './modules/dom-helpers';
 
-const { renderMain, renderProjects, renderTodos, renderFilteredTodos, toggleIcon } = DisplayController;
+const { renderMain, renderProjects, renderTodos, renderFilteredTodos } = DisplayController;
 
-const { addTodo, handleDueUpdate, handlePriorityUpdate, handleDescriptionUpdate, markImportant } = Todos;
+const { addTodo, removeTodo, handleDueUpdate, handlePriorityUpdate, handleDescriptionUpdate, markImportant } = Todos;
 
 // Start default projects
 init();
@@ -44,11 +47,20 @@ const addTodoForm = getElement('.addTodoForm');
 const modalContainer = getElement('.modal-container');
 const modalQuestion = getElement('.question__cta');
 const modalOk = getElement('.ok__cta');
+const aside = getElement('.aside');
+const overlay = getElement('.overlay');
+const todoDetails = getElement('.todo-details');
+const chevron = getElement('.chevron-icon');
 
 addProjectBtn.addEventListener('click', (ev) => {
 	const childNode = ev.target.firstElementChild;
 	toggleClass(childNode, 'cta-icon--rotate');
 	toggleClass(formGroup, 'form__group--active');
+
+	if (window.innerWidth < 768) {
+		toggleClass(aside, 'aside--active');
+		toggleClass(overlay, 'overlay--active');
+	}
 });
 
 addTodoBtn.addEventListener('click', () => showForm(addTodoFormContainer));
@@ -66,7 +78,9 @@ addProjectForm.addEventListener('submit', (ev) => {
 	renderMain(inputValue);
 	renderTodos();
 	clearFields(addProjectForm);
-	addProjectBtn.click();
+
+	toggleClass(addProjectBtn.firstElementChild, 'cta-icon--rotate');
+	toggleClass(formGroup, 'form__group--active');
 });
 
 // Modal actions
@@ -121,8 +135,16 @@ priorityGroup.forEach((priority) => {
 // Update markImportant
 const mark = getElement('.mark');
 mark.addEventListener('click', ({ target }) => {
+	const child = target.childNodes[1];
 	markImportant(target.parentNode.previousElementSibling.innerText);
-	toggleIcon(target.childNodes[1], 'marked');
+
+	if (child.classList.contains('marked')) {
+		removeClass(child, 'marked', 'animated', 'bounceIn');
+		addClass(child, 'unmarked', 'animated', 'bounceIn');
+	} else {
+		removeClass(child, 'unmarked', 'animated', 'bounceIn');
+		addClass(child, 'marked', 'animated', 'bounceIn');
+	}
 	renderTodos();
 });
 
@@ -132,6 +154,14 @@ description.addEventListener('change', ({ target }) => {
 	handleDescriptionUpdate(target.value);
 });
 
+// Delete todo
+const todoDeleteBtn = getElement('.todos__action-delete');
+todoDeleteBtn.addEventListener('click', ({ target }) => {
+	removeTodo(target.parentNode.previousElementSibling.innerText);
+	renderTodos();
+	toggleClass(overlay, 'overlay--active');
+	toggleClass(todoDetails, 'todo-details--mobile-active');
+});
 // Search input
 const updateSearchText = (value) => {
 	const heading = getElement('.todos__heading');
@@ -150,11 +180,44 @@ searchInput.addEventListener('blur', () => {
 	}
 });
 
-// Close todo form on Esc key
-window.addEventListener('keyup', (ev) => {
+// Close on Esc key
+document.addEventListener('keyup', (ev) => {
 	if (ev.keyCode === 27) {
 		hideForm(addTodoFormContainer);
+
+		if (aside.classList.contains('aside--active')) {
+			removeClass(aside, 'aside--active');
+			removeClass(addProjectBtn.firstElementChild, 'cta-icon--rotate');
+			removeClass(formGroup, 'form__group--active');
+			toggleClass(overlay, 'overlay--active');
+		} else if (todoDetails.classList.contains('todo-details--mobile-active')) {
+			removeClass(todoDetails, 'todo-details--mobile-active', 'todo-details--active');
+			toggleClass(overlay, 'overlay--active');
+		}
 	}
+});
+
+// Close on clicking outside of modal
+document.addEventListener('click', (ev) => {
+	if (ev.target === overlay) {
+		if (aside.classList.contains('aside--active')) {
+			removeClass(aside, 'aside--active');
+			removeClass(addProjectBtn.firstElementChild, 'cta-icon--rotate');
+			removeClass(formGroup, 'form__group--active');
+			toggleClass(overlay, 'overlay--active');
+		} else if (todoDetails.classList.contains('todo-details--mobile-active')) {
+			removeClass(todoDetails, 'todo-details--mobile-active', 'todo-details--active');
+			toggleClass(overlay, 'overlay--active');
+		}
+	}
+});
+
+// Chevron
+chevron.addEventListener('click', ({ target }) => {
+	const child = target.firstElementChild;
+	toggleClass(target, 'chevron-icon--active');
+	toggleClass(aside, 'aside--active-small');
+	toggleClass(child, 'chevron-icon--left');
 });
 
 if (localStorage.getItem('projects') !== null) {

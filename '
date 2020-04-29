@@ -60,7 +60,7 @@ main {
 }
 .todo-details {
 	max-width: 340px;
-	height: 100%;
+	min-width: 340px;
     background: #fff;
     padding: 38px 30px;
     margin-left: 30px;
@@ -68,10 +68,11 @@ main {
 	right: -100vw;
 	transition: all 200ms ease-in-out;
 	&--mobile-active {
-		height: 100%;
+		height: calc(100% - 57px);
 		position: absolute;
 		right: 0;
 		z-index:9999;
+		right:0;
 	}
     &__top {
 		max-width: 100%;
@@ -122,7 +123,6 @@ main {
     background: #fff;
     padding: 38px 30px;
     width: 100%;
-	height: calc(100vh - 57px);
     &__top {
         display: flex;
         justify-content: space-between;
@@ -196,12 +196,10 @@ main {
             flex-direction: column;
             margin-left: 15px;
 			pointer-events: none;
-			width: 65%;
         }
         &__list-title {
             font-size: 20px;
             font-weight: $bold;
-			word-wrap: break-word;
         }
         &__list-date {
             font-size: 16px;
@@ -468,7 +466,7 @@ main {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0,0,0,0.1);
+	background: rgba(0,0,0,0.5);
 	z-index: 1;
 	display: none;
 	&--active {
@@ -486,66 +484,7 @@ main {
 		padding: 38px 20px;
 	}
 }
-@media only screen and (max-width: 600px) {
-	.form-wrapper {
-		width: 300px;
-	}
-	.addTodoForm {
-		&__heading {
-			font-size: 20px;
-		}
-		&__radio-label {
-			padding: 6px 15px;
-			&--sm {
-				padding: 6px 10px; 
-			}
-		}
-		&__cta {
-			padding: 6px 30px;
-		}
-	}
-	.todos {
-		&__action-mark, &__action-delete {
-			width: 38px;
-			height: 38px;
-			font-size: 20px;
-		}
-		&__action-delete {
-			margin-left: 5px;
-		}
-	}
-}
-@media only screen and(max-width: 480px) {
-	.todo-details {
-		width: 260px;
-		padding: 38px 15px;
-		.form-group {
-			&__input, &__textarea {
-				padding: 6px;
-			}
-			&__textarea {
-				height: 70px;
-			}
-		}
-	}
-	.addTodoForm {
-		&__radio-label {
-			&--sm {
-				font-size: 15px;
-				padding: 6px 14px; 
-			}
-		}
-	}
-	.wrapper-flex {
-		margin-left: 0;
-	}		
-	.search-bar {
-		margin-left: 0;
-	}
-	.todos {
-		padding: 38px 20px;
-	}
-}
+
 @keyframes lineAnimation {
     from {
         text-decoration-color:transparent;

@@ -18,12 +18,7 @@ const { getTodos, getSelectedTodo, selectTodo, toggleCompletedTodo, removeTodo, 
 const DisplayConroller = (() => {
 	const renderProjects = () => {
 		// Side icons for projects
-		const icons = [
-			'view-grid-outline',
-			'calendar-month-outline',
-			'calendar-month-outline',
-			'clipboard-check-outline',
-		];
+		const icons = ['view-grid-outline', 'calendar-month-outline', 'star-outline', 'clipboard-check-outline'];
 
 		const projects = JSON.parse(localStorage.getItem('projects'));
 		const projectList = getElement('.list');
@@ -129,7 +124,7 @@ const DisplayConroller = (() => {
 
 			// icons
 			const favIcon = createElement('i', {
-				class: todo.isImportant ? 'mdi mdi-star' : 'mdi mdi-star-outline',
+				class: todo.isImportant ? 'marked' : 'unmarked',
 			});
 			const trashIcon = createElement('i', { class: 'mdi mdi-trash-can-outline' });
 
@@ -151,20 +146,14 @@ const DisplayConroller = (() => {
 
 			li.append(prioritySpan, detailsDiv, actionsDiv);
 
-			let clicks = 0;
 			li.addEventListener('click', ({ target }) => {
-				clicks += 1;
 				const { title } = target.dataset;
-				selectTodo(title);
 
+				addClass(getElement('.overlay'), 'overlay--active');
+				addClass(getElement('.todo-details'), 'todo-details--mobile-active');
+				selectTodo(title);
 				removeClassFromSiblings(target, 'selected');
 				addClass(target, 'selected');
-				addClass(getElement('.todo-details'), 'todo-details--active');
-				if (clicks > 1) {
-					removeClass(getElement('.todo-details'), 'todo-details--active');
-					clicks = 0;
-				}
-
 				renderTodoDetails();
 			});
 
@@ -181,7 +170,7 @@ const DisplayConroller = (() => {
 				const todoItem = ev.target.closest('.todos__list-item');
 				toggleCompletedTodo(todoItem.dataset.title);
 				toggleLinethrough(todoItem);
-				toggleIcon(ev.target, 'completed');
+				toggleClasses(ev.target, 'completed', 'animated', 'bounceIn');
 			});
 
 			spanDelete.addEventListener('click', (ev) => {
@@ -203,7 +192,13 @@ const DisplayConroller = (() => {
 				const child = ev.target.childNodes[0];
 				const todoItem = ev.target.closest('.todos__list-item');
 				markImportant(todoItem.dataset.title);
-				toggleIcon(child, 'marked');
+				if (child.classList.contains('marked')) {
+					removeClass(child, 'marked', 'animated', 'bounceIn');
+					addClass(child, 'unmarked', 'animated', 'bounceIn');
+				} else {
+					removeClass(child, 'unmarked', 'animated', 'bounceIn');
+					addClass(child, 'marked', 'animated', 'bounceIn');
+				}
 				renderTodoDetails();
 			});
 
@@ -220,8 +215,8 @@ const DisplayConroller = (() => {
 		const todoDescription = getElement('textarea[name="description-2"]');
 
 		todoHeading.textContent = selected.todo.title;
-		spanMark.className = selected.todo.isImportant ? 'mdi mdi-star' : 'mdi mdi-star-outline';
-		todoDue.value = formatDate(new Date(selected.todo.due), 'F j, Y');
+		spanMark.className = selected.todo.isImportant ? 'marked' : 'unmarked';
+		todoDue.value = selected.todo.due ? formatDate(new Date(selected.todo.due), 'F j, Y') : 'Pick a date';
 		todoPriority.checked = true;
 		todoDescription.textContent = selected.todo.description;
 	};
@@ -247,10 +242,6 @@ const DisplayConroller = (() => {
 		});
 	};
 
-	const toggleIcon = (target, classToToggle) => {
-		toggleClasses(target, classToToggle, 'animated', 'bounceIn');
-	};
-
 	return {
 		renderProjects,
 		renderMain,
@@ -258,7 +249,6 @@ const DisplayConroller = (() => {
 		renderFilteredTodos,
 		renderTodoDetails,
 		hightlightProject,
-		toggleIcon,
 	};
 })();
 
