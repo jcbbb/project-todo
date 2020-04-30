@@ -59,13 +59,15 @@ main {
 .wrapper-flex {
     display: flex;
     background: $primary-color-light;
-    min-height: calc(100vh - 57px);
+    min-height: 580px;
+	height: calc(100vh - 57px);
 	overflow:hidden;
 	position: relative;
 }
 .todo-details {
 	max-width: 340px;
-	min-height: calc(100vh - 57px);
+	height: calc(100vh - 57px);
+	min-height: 580px;
     background: #fff;
     padding: 38px 30px;
     margin-left: 30px;

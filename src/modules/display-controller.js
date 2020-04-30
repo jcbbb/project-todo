@@ -113,7 +113,7 @@ const DisplayConroller = (() => {
 				class: 'todos__list-date',
 			});
 			const actionsDiv = createElement('div', {
-				class: todo.completed ? 'todos__list-actions line-through' : 'todos__list-actions',
+				class: 'todos__list-actions',
 			});
 			const spanMark = createElement('span', {
 				class: 'todos__action-mark',
@@ -237,8 +237,9 @@ const DisplayConroller = (() => {
 
 	const toggleLinethrough = (target) => {
 		target.childNodes.forEach((child, index) => {
-			if (index === 0) return;
-			toggleClass(child, 'line-through');
+			if (index === 1) {
+				toggleClass(child, 'line-through');
+			}
 		});
 	};
 
