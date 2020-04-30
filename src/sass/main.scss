@@ -59,7 +59,7 @@ main {
 .wrapper-flex {
     display: flex;
     background: $primary-color-light;
-    min-height: calc(100% - 57px);
+    min-height: calc(100vh - 57px);
 	overflow:hidden;
 	position: relative;
 }
