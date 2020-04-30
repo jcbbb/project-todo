@@ -25,6 +25,7 @@
 	},
 	"dependencies": {
 		"animate.css": "^3.7.2",
+		"file-loader": "^6.0.0",
 		"flatpickr": "^4.6.3"
 	}
 }

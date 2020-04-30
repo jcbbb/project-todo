@@ -1,3 +1,8 @@
+@font-face {
+	font-family: 'Futura PT';
+	src: url('../assets/fonts/FuturaPT-Demi.woff') format('woff'),
+		 url('../assets/fonts/FuturaPT-Book.woff') format('woff');
+}
 @import './vars';
 @import './aside';
 
