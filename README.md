@@ -1,2 +1,2 @@
 # Project Todo
-[View in browser](https://avazkhan2808.github.io/project-todo/)
+[View in browser](https://jcbbb.github.io/project-todo/)
