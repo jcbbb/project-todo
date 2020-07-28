@@ -1,2 +1,2 @@
-# Project Todo
-[View in browser](https://jcbbb.github.io/project-todo/)
+## Project Todo
+[Live Demo](https://jcbbb.github.io/project-todo/)
